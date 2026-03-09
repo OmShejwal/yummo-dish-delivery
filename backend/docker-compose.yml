@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: yummo_mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - yummo_network
+
+  backend:
+    build: .
+    container_name: yummo_backend
+    ports:
+      - "8000:8000"
+    environment:
+      MONGODB_URL: mongodb://admin:password@mongodb:27017
+      DATABASE_NAME: yummo_delivery
+      SECRET_KEY: ${SECRET_KEY:-your-secret-key-change-in-production}
+      DEBUG: "False"
+    depends_on:
+      - mongodb
+    volumes:
+      - .:/app
+    networks:
+      - yummo_network
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+volumes:
+  mongodb_data:
+
+networks:
+  yummo_network:
+    driver: bridge
