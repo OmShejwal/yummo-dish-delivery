@@ -48,6 +48,10 @@ coverage.xml
 
 # MongoDB data
 data/
+*.zip
+*.msi
+mongodb.zip
+backend/mongodb.msi
 
 # Editor directories and files
 .vscode/*
