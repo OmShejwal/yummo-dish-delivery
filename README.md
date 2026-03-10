@@ -34,6 +34,35 @@ A full-stack food delivery platform built with React, TypeScript, FastAPI, and M
 - Python 3.11+
 - MongoDB
 
+### Quick Access Links
+
+After starting the development servers, you can access the application using these convenient methods:
+
+#### 🌐 **Web Links**
+- **Frontend (Web)**: http://localhost:8080
+- **Backend API**: http://localhost:8000
+- **API Documentation**: http://localhost:8000/docs
+
+#### 🛠️ **Quick Launch Scripts**
+Run these commands from the project root:
+
+```bash
+# Open development dashboard (recommended)
+.\web.bat          # Windows batch file
+.\web.ps1 -Dashboard  # PowerShell script
+
+# Direct access to services
+.\web.ps1 -Frontend   # Open React frontend
+.\web.ps1 -Backend    # Open FastAPI backend
+.\web.ps1 -Docs       # Open API documentation
+```
+
+#### 📁 **Files Created**
+- `web.html` - Development dashboard with all links
+- `web.bat` - Windows batch launcher
+- `web.ps1` - PowerShell launcher
+- `Yummo Frontend.url` - Desktop shortcut (on Desktop)
+
 ### Installation
 
 1. **Clone the repository**

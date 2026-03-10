@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yummo Dish Delivery - Development Links</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .link-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+        .link-card h3 {
+            margin: 0 0 10px 0;
+            color: #667eea;
+        }
+        .link-card p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .status {
+            margin-top: 30px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        .status.running {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍽️ Yummo Dish Delivery</h1>
+
+        <div class="links">
+            <a href="http://localhost:8080" class="link-card" target="_blank">
+                <h3>🌐 Frontend (Web)</h3>
+                <p>React + Vite<br>Port: 8080</p>
+            </a>
+
+            <a href="http://localhost:8000" class="link-card" target="_blank">
+                <h3>🔧 Backend API</h3>
+                <p>FastAPI + Python<br>Port: 8000</p>
+            </a>
+
+            <a href="http://localhost:8000/docs" class="link-card" target="_blank">
+                <h3>📚 API Docs</h3>
+                <p>Swagger UI<br>Interactive API</p>
+            </a>
+
+            <a href="http://localhost:8000/redoc" class="link-card" target="_blank">
+                <h3>📖 API Reference</h3>
+                <p>ReDoc<br>Detailed Docs</p>
+            </a>
+        </div>
+
+        <div class="status running">
+            ✅ Development servers are running
+        </div>
+    </div>
+</body>
+</html>
