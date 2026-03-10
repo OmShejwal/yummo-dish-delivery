@@ -2,12 +2,12 @@
  * Home Page — Hero, search, featured restaurants, popular dishes.
  */
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Search, MapPin, Zap, Shield, Clock, Star } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import RestaurantCard from "@/components/RestaurantCard";
-import { restaurants, menuItems } from "@/data/mockData";
+import { restaurantService, type Restaurant } from "@/lib/restaurantApi";
 import heroBanner from "@/assets/hero-banner.jpg";
 import { useApp } from "@/contexts/AppContext";
 
@@ -16,21 +16,57 @@ const CUISINE_FILTERS = ["All", "Italian", "Japanese", "American", "Indian"];
 export default function Index() {
   const [search, setSearch] = useState("");
   const [cuisine, setCuisine] = useState("All");
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { dispatch } = useApp();
+
+  useEffect(() => {
+    loadRestaurants();
+  }, []);
+
+  const loadRestaurants = async () => {
+    try {
+      setLoading(true);
+      const data = await restaurantService.getRestaurants();
+      setRestaurants(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load restaurants');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filtered = useMemo(() => {
     return restaurants.filter((r) => {
       const matchSearch =
         !search ||
         r.name.toLowerCase().includes(search.toLowerCase()) ||
-        r.cuisine.toLowerCase().includes(search.toLowerCase()) ||
-        r.tags.some((t) => t.toLowerCase().includes(search.toLowerCase()));
-      const matchCuisine = cuisine === "All" || r.cuisine === cuisine;
+        r.cuisine_types.some((c) => c.toLowerCase().includes(search.toLowerCase()));
+      const matchCuisine = cuisine === "All" || r.cuisine_types.includes(cuisine);
       return matchSearch && matchCuisine;
     });
-  }, [search, cuisine]);
+  }, [search, cuisine, restaurants]);
 
-  const popularDishes = menuItems.filter((m) => m.popular).slice(0, 4);
+  // Convert API restaurant format to component format
+  const convertRestaurant = (r: Restaurant) => ({
+    id: r.id,
+    name: r.name,
+    cuisine: r.cuisine_types.join(", "),
+    rating: r.rating,
+    reviewCount: r.reviews_count,
+    deliveryTime: "25-35 min", // Default, could be made dynamic
+    deliveryFee: r.delivery_fee,
+    minOrder: r.min_order_value,
+    image: r.banner_url || r.logo_url || '/placeholder-restaurant.jpg',
+    featured: r.rating >= 4.5,
+    open: r.is_active,
+    address: r.address,
+    tags: r.cuisine_types,
+    ownerId: r.vendor_id,
+  });
+
+  const popularDishes = []; // TODO: Implement popular dishes from API
 
   return (
     <div className="min-h-screen">
@@ -131,7 +167,18 @@ export default function Index() {
           </div>
         </div>
 
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="text-center py-16 text-muted-foreground">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand mx-auto mb-4"></div>
+            <p className="font-semibold">Loading restaurants...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-16 text-muted-foreground">
+            <p className="text-4xl mb-3">❌</p>
+            <p className="font-semibold">{error}</p>
+            <Button className="mt-4" onClick={loadRestaurants}>Try Again</Button>
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
             <p className="text-4xl mb-3">🍽️</p>
             <p className="font-semibold">No restaurants found</p>
@@ -141,7 +188,7 @@ export default function Index() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {filtered.map((r, i) => (
               <div key={r.id} className={`stagger-${Math.min(i + 1, 5)}`}>
-                <RestaurantCard restaurant={r} />
+                <RestaurantCard restaurant={convertRestaurant(r)} />
               </div>
             ))}
           </div>
